@@ -1,0 +1,20 @@
+:root {
+    --purple-900: #160d27;
+}
+
+.custom-navbar .navbar-brand,
+.custom-navbar .nav-link,
+.custom-navbar .navbar-toggler-icon {
+    color: #fff;
+}
+
+.custom-navbar .nav-link:hover,
+.custom-navbar .nav-link:focus {
+    color: #afdbff;
+}
+
+
+.bg-purple-900 {
+    color: #fff;
+    background-color: var(--purple-900);
+}
