@@ -1,6 +1,8 @@
 :root {
     --purple-900: #160d27;
+    --navy-blue: rgb(6 56 249 / 86%);
 }
+
 
 .custom-navbar .navbar-brand,
 .custom-navbar .nav-link,
@@ -9,12 +11,44 @@
 }
 
 .custom-navbar .nav-link:hover,
-.custom-navbar .nav-link:focus {
+.custom-navbar .nav-link:focus,
+.custom-navbar .nav-link.active:hover,
+.custom-navbar .nav-link.active:focus {
     color: #afdbff;
 }
 
+/* keep the active nav link the same color as other links */
+.custom-navbar .nav-link.active {
+    color: #fff;
+}
 
 .bg-purple-900 {
     color: #fff;
     background-color: var(--purple-900);
+}
+
+.navbar-brand img {
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+}
+
+.navbar-toggler {
+    background-color: #ffffff;
+    border: var(--bs-border-width) solid var(--navy-blue);
+}
+
+/* header */
+header {
+    width: 100%;
+    height: 100vh;
+    background-image: url('https://images.unsplash.com/photo-1481151500463-1fa2dd2d5dbe?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8ZGFyayUyMG9mZmljZXxlbnwwfHwwfHx8MA%3D%3D');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+main {
+    background-color: #3e00856e;
 }
