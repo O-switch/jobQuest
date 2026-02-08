@@ -1,5 +1,6 @@
 :root {
     --purple-900: #160d27;
+    --purple-800: #1b004f;
     --navy-blue: rgb(6 56 249 / 86%);
 }
 
@@ -26,7 +27,9 @@
     color: #fff;
     background-color: var(--purple-900);
 }
-
+.text-purple-900 {
+    color: var(--purple-800);
+}
 .navbar-brand img {
     width: 60px;
     height: 60px;
@@ -51,4 +54,5 @@ header {
 
 main {
     background-color: #3e00856e;
+    height: 86vh !important;
 }

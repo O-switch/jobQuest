@@ -28,7 +28,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="#">Home</a>
                         </li>
@@ -36,22 +36,24 @@
                             <a class="nav-link" href="#">About</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Open Job</a>
+                            <a class="nav-link" href="jobs.html">Jobs</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Contact</a>
                         </li>
 
                     </ul>
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                        <button class="btn btn-light" type="submit">Search</button>
-                    </form>
+
+                    <!-- login and register button -->
+                    <div class="mt-3">
+                        <a class="btn btn-light me-2" href="login.html">Login</a>
+                        <a class="btn btn-outline-light" href="register.html">Register</a>
+                    </div>
                 </div>
             </div>
         </nav>
         <!-- main section of the header -->
-        <main class="text-light d-flex flex-column justify-content-center align-items-center vh-100 text-center">
+        <main class="text-light d-flex flex-column justify-content-center align-items-center text-center">
             <h1 class="fs-1">JobQuest</h1>
             <p class="w-75">A smarter way for companies to hire and for candidates to grow their careers.</p>
             <div class="mt-3">
@@ -61,24 +63,132 @@
         </main>
     </header>
 
+    <!-- main section of the page -->
+    <section class="container my-5">
+        <h2 class="text-center mb-4 text-purple-900">Why Choose JobQuest?</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">For Job Seekers</h5>
+                        <p class="card-text">Discover a wide range of job opportunities tailored to your skills and
+                            preferences. Our platform connects you with top employers while providing a built-in
+                            application tracking system that lets you easily monitor jobs you’ve applied to, interview
+                            invitations, offers, and rejections-all in one place. We also suggest personalized job
+                            opportunities based on your interests and career goals, giving you the tools and insights
+                            you need to succeed in your career..</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">For Employers</h5>
+                        <p class="card-text">Our platform makes it easy to post job openings, showcase your company, and
+                            reach qualified candidates. Employers can include company details, websites, and direct
+                            application links, manage job listings efficiently, and communicate directly with candidates
+                            through our built-in messaging system-streamlining the hiring process from start to finish.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
 
 
+    <div class="container mt-4">
+        <h1 class="mb-4 text-center text-purple-900">Job Listings</h1>
 
+        <!-- Job grid -->
+        <div id="jobs" class="row g-3"></div>
 
+        <!-- Pagination -->
+        <nav aria-label="Job pagination" class="mt-4">
+            <ul id="pagination" class="pagination justify-content-center"></ul>
+        </nav>
+    </div>
 
+    <!-- <script>
+        const jobList = document.getElementById("jobs");
+        const pagination = document.getElementById("pagination");
 
+        let currentPage = 1;
+        let totalPages = 10; // you can set this dynamically if API returns page_count
 
+        // Fetch and display jobs for a given page
+        async function fetchJobs(page) {
+            const response = await fetch(
+                `https://www.themuse.com/api/public/jobs?category=Software%20Engineering&page=${page}`
+            );
+            const data = await response.json();
 
+            // Clear existing jobs
+            jobList.innerHTML = "";
 
+            data.results.forEach(job => {
+                const col = document.createElement("div");
+                col.className = "col-12 col-md-6 col-lg-4";
 
+                col.innerHTML = `
+                        <div class="card h-100">
+                            <div class="card-body">
+                            <h5 class="card-title">${job.name}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">${job.company.name}</h6>
+                            <p class="card-text">
+                                Location: ${job.locations.length ? job.locations.map(l => l.name).join(", ") : "N/A"}
+                            </p>
+                            </div>
+                        </div>
+                        `;
+                jobList.appendChild(col);
+            });
+
+            // Highlight current page in pagination
+            updatePagination(page);
+        }
+
+        // Create pagination buttons
+        function createPagination(total) {
+            pagination.innerHTML = "";
+
+            for (let i = 1; i <= total; i++) {
+                const li = document.createElement("li");
+                li.className = `page-item ${i === currentPage ? "active" : ""}`;
+
+                li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+
+                li.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    currentPage = i;
+                    fetchJobs(currentPage);
+                });
+
+                pagination.appendChild(li);
+            }
+        }
+
+        // Update active page
+        function updatePagination(page) {
+            const pages = pagination.querySelectorAll(".page-item");
+            pages.forEach((li, index) => {
+                li.classList.toggle("active", index + 1 === page);
+            });
+        }
+
+        // Initialize
+        fetchJobs(currentPage);
+        createPagination(totalPages);
+
+    </script> -->
 
 
 
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+        </script>
 </body>
 
 </html>

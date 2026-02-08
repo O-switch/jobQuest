@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Jobs - JobQuest</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- favicon -->
+    <link rel="icon" href="Img/jobQuest_logo.jpg" type="image/x-icon">
+    <link rel="shortcut icon" href="Img/jobQuest_logo.jpg" type="image/x-icon">
+    <link rel="apple-touch-icon" href="Img/jobQuest_logo.jpg">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-purple-900 custom-navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html"><img src="Img/jobQuest_logo.jpg" alt="" width="50"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"
+                aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link text-light" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link text-light active" href="jobs.html">Jobs</a></li>
+                </ul>
+                <div class="d-flex">
+                    <a class="btn btn-light me-2" href="login.html">Login</a>
+                    <a class="btn btn-outline-light" href="register.html">Register</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <h1 class="mb-4 text-center text-purple-900">Job Listings</h1>
+
+        <!-- Job grid -->
+        <div id="jobs" class="row g-3"></div>
+
+        <!-- Pagination -->
+        <nav aria-label="Job pagination" class="mt-4">
+            <ul id="pagination" class="pagination justify-content-center"></ul>
+        </nav>
+    </div>
+    <!-- <main class="py-5">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h1>Job Listings</h1>
+                    <p class="text-muted">Search and filter open roles from companies across the web. Click company
+                        names to visit their site.</p>
+                </div>
+                <div class="col-md-4">
+                    <input id="searchInput" class="form-control" placeholder="Search jobs by keyword, company, location...">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <small id="resultCount" class="text-muted">Loading jobs...</small>
+                </div>
+                <div class="col-md-6 text-end">
+                    <select id="filterRemote" class="form-select w-auto d-inline-block me-2">
+                        <option value="">All</option>
+                        <option value="Remote">Remote</option>
+                        <option value="Hybrid">Hybrid</option>
+                        <option value="Onsite">Onsite</option>
+                    </select>
+                    <select id="filterDate" class="form-select w-auto d-inline-block">
+                        <option value="">Any time</option>
+                        <option value="24h">Last 24 hours</option>
+                        <option value="7d">Last 7 days</option>
+                        <option value="30d">Last 30 days</option>
+                        <option value="1y">Last year</option>
+                        <option value=">1y">Over a year</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="jobsContainer" class="row g-3"></div>
+        </div>
+    </main> -->
+
+    <script src="js/jobs.js"></script>
+    <script>
+        // jobs.js exposes `jobsData` array. Merge with any jobs posted via the post-job page (localStorage).
+        const generatedJobs = window.jobsData || [];
+        const stored = JSON.parse(localStorage.getItem('postedJobs') || '[]');
+        const jobs = generatedJobs.concat(stored || []);
+        const container = document.getElementById('jobsContainer');
+        const input = document.getElementById('searchInput');
+        const countEl = document.getElementById('resultCount');
+        const filterRemote = document.getElementById('filterRemote');
+        const filterDate = document.getElementById('filterDate');
+
+        function renderJobs(list) {
+            container.innerHTML = '';
+            if (!list.length) {
+                container.innerHTML = '<div class="col-12"><div class="alert alert-info">No jobs found.</div></div>';
+                countEl.textContent = '0 jobs';
+                return;
+            }
+            countEl.textContent = `${list.length} jobs`;
+            const frag = document.createDocumentFragment();
+            list.forEach(job => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6';
+                const card = document.createElement('div');
+                card.className = 'card h-100';
+                const body = document.createElement('div');
+                body.className = 'card-body';
+                // compute posted time display
+                const posted = job.datePosted ? new Date(job.datePosted) : null;
+                const postedText = posted ? timeAgo(posted) : 'Unknown';
+
+                body.innerHTML = `
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="card-title mb-1">${job.title}</h5>
+                        <small class="text-muted">${job.type} • ${job.remote}</small>
+                    </div>
+                    <p class="mb-1">${job.company} — <a href="${job.companyUrl || job.url || '#'}" target="_blank" rel="noopener">Company</a> • <a href="${job.applyUrl || job.companyUrl || job.url || '#'}" target="_blank" rel="noopener">Apply</a></p>
+                    <p class="mb-1 text-muted small">${job.location}</p>
+                    <p class="mb-1 text-muted small">Posted: ${postedText}</p>
+                    <p class="card-text">${job.description}</p>
+                `;
+                card.appendChild(body);
+                col.appendChild(card);
+                frag.appendChild(col);
+            });
+            container.appendChild(frag);
+        }
+
+        function normalize(str) { return (str || '').toString().toLowerCase(); }
+
+        function applyFilter() {
+            const q = normalize(input.value.trim());
+            const remoteFilter = filterRemote.value;
+            const dateFilter = filterDate.value;
+            const filtered = jobs.filter(j => {
+                if (remoteFilter && j.remote !== remoteFilter) return false;
+                if (dateFilter && j.datePosted) {
+                    const posted = new Date(j.datePosted);
+                    const now = new Date();
+                    const diff = now - posted; // ms
+                    const oneDay = 24 * 60 * 60 * 1000;
+                    if (dateFilter === '24h' && diff > oneDay) return false;
+                    if (dateFilter === '7d' && diff > 7 * oneDay) return false;
+                    if (dateFilter === '30d' && diff > 30 * oneDay) return false;
+                    if (dateFilter === '1y' && diff > 365 * oneDay) return false;
+                    if (dateFilter === '>1y' && diff <= 365 * oneDay) return false;
+                }
+                if (!q) return true;
+                return normalize(j.title).includes(q)
+                    || normalize(j.company).includes(q)
+                    || normalize(j.location).includes(q)
+                    || normalize(j.description).includes(q);
+            });
+            renderJobs(filtered);
+        }
+
+        function timeAgo(d) {
+            const now = new Date();
+            const diff = Math.floor((now - d) / 1000);
+            if (diff < 60) return `${diff}s ago`;
+            if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+            if (diff < 30 * 86400) return `${Math.floor(diff / 86400)}d ago`;
+            if (diff < 365 * 86400) return `${Math.floor(diff / (30 * 86400))}mo ago`;
+            return `${Math.floor(diff / (365 * 86400))}y ago`;
+        }
+
+        // initial render
+        renderJobs(jobs.slice(0, 1000));
+
+        input.addEventListener('input', applyFilter);
+        filterRemote.addEventListener('change', applyFilter);
+        filterDate.addEventListener('change', applyFilter);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
